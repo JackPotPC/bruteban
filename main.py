@@ -7,8 +7,11 @@ from utils import find_file_by_name, setup_logger, get_logger
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_DIR = PROJECT_ROOT / "config"
-CONFIG_FILE = CONFIG_DIR / "bruteban.conf"
+print(PROJECT_ROOT)
+CONFIG_DIR = PROJECT_ROOT / "bruteban" / "config"
+CONFIG_FILE = CONFIG_DIR  / "bruteban.conf"
+print(CONFIG_DIR)
+print(CONFIG_FILE)
 log = get_logger(__name__)
 
 
