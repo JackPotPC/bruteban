@@ -26,7 +26,8 @@ class LogMonitor:
 			for entry in j:
 				message = entry.get("MESSAGE", "")
 				print(message)
-				match = self.regex.search(log_line)
+				match = cell['filter'].search(log_line)
 				if match:
 					log.warning("Найдено совпадение")
+					match2 = cell['extract'].search(log_line)
 					self.action
