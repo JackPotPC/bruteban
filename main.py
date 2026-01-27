@@ -1,12 +1,16 @@
-import os
 import threading
-import signal
+from pathlib import Path
 from client.cell import Cell
 from client.cellqueue import CellQueue
 from server.logmonitor import LogMonitor
 from utils import find_file_by_name, setup_logger, get_logger
 
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CONFIG_DIR = PROJECT_ROOT / "config"
+CONFIG_FILE = CONFIG_DIR / "bruteban.conf"
 log = get_logger(__name__)
+
 
 class BruteBan:
     def __init__(self):
@@ -17,11 +21,11 @@ class BruteBan:
 
     def setup(self):
         log.info("Настройка сервиса...")
-        cellqueue = CellQueue("/home/jackpot/projects/Brute-Ban/config/bruteban.conf")
+        cellqueue = CellQueue(CONFIG_FILE)
         cellqueue.load()
         cell_queue = cellqueue.get_queue()
         for i in cell_queue:
-            cell = Cell(find_file_by_name("/home/jackpot/projects/Brute-Ban/config", i))
+            cell = Cell(find_file_by_name(CONFIG_DIR, i))
             cell.load()
             self.queue[i] = cell.get_config()
         log.info("Сервис настроен.")
