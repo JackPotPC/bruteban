@@ -1,4 +1,6 @@
 from systemd import journal
+from utils import get_logger
+
 
 log = get_logger(__name__)
 
