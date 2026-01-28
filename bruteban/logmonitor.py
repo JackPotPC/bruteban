@@ -2,7 +2,7 @@ import re
 from systemd import journal
 
 from utils import get_logger
-from client.action import Action
+from bruteban.action import Action
 
 log = get_logger(__name__)
 
@@ -14,14 +14,14 @@ class LogMonitor:
 	def start(self):
 		self.monitoring()
 
-	def monitoring(self, cell):
+	def monitoring(self, cell, action_dir):
 		j = journal.Reader()
 		j.add_match(_SYSTEMD_UNIT=cell['systemd_unit_name'])
 		j.seek_tail()
 		j.get_next()
 		filter_pattern = re.compile(rf"{cell['filter']}", re.IGNORECASE)
 		extract_pattern = re.compile(rf"{cell['extract']}", re.IGNORECASE)
-		action = Action(cell['action'])
+		action = Action(cell['action'], action_dir)
 		while True:
 			j.wait()
 			for entry in j:

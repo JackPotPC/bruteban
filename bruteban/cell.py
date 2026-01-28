@@ -1,4 +1,4 @@
-from client.parser import Parser
+from bruteban.parser import Parser
 
 class Cell(Parser):
 	def __init__(self, config_file):
