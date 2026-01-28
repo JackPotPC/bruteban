@@ -1,16 +1,14 @@
+import re
 from systemd import journal
-from utils import get_logger
 
+from utils import get_logger
+from client.action import Action
 
 log = get_logger(__name__)
 
 
 class LogMonitor:
 	def __init__(self):
-		# self.stream = stream
-		# self.action = action
-		# self.bantime = bantime
-		# self.regex = regex
 		pass
 
 	def start(self):
@@ -21,13 +19,15 @@ class LogMonitor:
 		j.add_match(_SYSTEMD_UNIT=cell['systemd_unit_name'])
 		j.seek_tail()
 		j.get_next()
+		filter_pattern = re.compile(rf"{cell['filter']}", re.IGNORECASE)
+		extract_pattern = re.compile(rf"{cell['extract']}", re.IGNORECASE)
+		action = Action(cell['action'])
 		while True:
 			j.wait()
 			for entry in j:
 				message = entry.get("MESSAGE", "")
-				print(message)
-				match = cell['filter'].search(log_line)
-				if match:
+				log.info(message)
+				if filter_pattern.search(message):
 					log.warning("Найдено совпадение")
-					match2 = cell['extract'].search(log_line)
-					self.action
+					extract = extract_pattern.search(message)
+					action.execute_action()

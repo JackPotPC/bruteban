@@ -1,0 +1,24 @@
+[Unit]
+Description=bruteban
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/bruteban/bruteban.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+#User=youruser
+#WorkingDirectory=/path/to/work-dir
+
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+StandardOutput=journal
+StandardError=journal
+
+#NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
