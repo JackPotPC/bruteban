@@ -19,7 +19,7 @@ def setup_logger(
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
-    logger.propagate = False
+    logger.propagate = True
 
     return logger
 

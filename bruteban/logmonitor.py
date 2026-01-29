@@ -11,9 +11,6 @@ class LogMonitor:
 	def __init__(self):
 		pass
 
-	def start(self):
-		self.monitoring()
-
 	def monitoring(self, cell, action_dir):
 		j = journal.Reader()
 		j.add_match(_SYSTEMD_UNIT=cell['systemd_unit_name'])
