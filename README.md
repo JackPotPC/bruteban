@@ -16,7 +16,7 @@ bruteban — это утилита для обнаружения и автома
 ### Требования
 
 - Linux
-- Python 3.10+ (если проект на Python)
+- Python 3.10+
 - Доступ к firewall
 
 ### Клонирование репозитория
@@ -24,3 +24,4 @@ bruteban — это утилита для обнаружения и автома
 ```bash
 git clone https://github.com/username/bruteban.git
 cd bruteban
+
