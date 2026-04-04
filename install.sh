@@ -2,43 +2,56 @@
 set -e
 
 APP_NAME="bruteban"
-INSTALL_DIR="/opt/$APP_NAME"
+INSTALL_DIR="/usr/local/lib/$APP_NAME"
+CONFIG_DIR="/etc/$APP_NAME"
+LOG_DIR="/var/log/$APP_NAME"
 SERVICE_FILE="$APP_NAME.service"
 
-echo "[*] Installing $APP_NAME..."
+check_root() {
+  if [[ $EUID -ne 0 ]]; then
+    echo "Запустить от имени root."
+    exit 1
+  fi
+}
 
-# проверка root
-if [[ $EUID -ne 0 ]]; then
-  echo "Run as root"
-  exit 1
-fi
+install_deps() {
+  if [[ "$OS" == "debian" ]]; then
+    apt install -y python3 python3.12-venv python3-pip iptables
+  elif [[ "$OS" == "fedora" ]]; then
+    dnf install -y python3 python3-venv python3-pip iptables
+  elif [[ "$OS" == "redhat" ]]; then
+    yum install -y python3 python3-venv python3-pip iptables
+  fi
+}
 
-# зависимости
-echo "[*] Installing dependencies..."
-dnf update
-dnf install -y python3 python3-venv python3-pip
+install_app() {
+  rm -rf "$INSTALL_DIR"
+  mkdir -p "$INSTALL_DIR"
+  cp -r . "$INSTALL_DIR"
 
-# копирование файлов
-echo "[*] Copying files..."
-rm -rf "$INSTALL_DIR"
-mkdir -p "$INSTALL_DIR"
-cp -r . "$INSTALL_DIR"
+  mkdir -p "$CONFIG_DIR"
+  cp "$PWD"/config/bruteban.conf $CONFIG_DIR
+  cp "$PWD"/config/sshd.conf $CONFIG_DIR
+  mkdir -p "$LOG_DIR"
 
-# venv
-echo "[*] Creating virtualenv..."
-python3 -m venv "$INSTALL_DIR/venv"
-"$INSTALL_DIR/venv/bin/pip" install --upgrade pip
+  python3 -m venv "$INSTALL_DIR/venv"
+  "$INSTALL_DIR/venv/bin/pip" install --upgrade pip
 
-if [[ -f "$INSTALL_DIR/requirements.txt" ]]; then
-  "$INSTALL_DIR/venv/bin/pip" install -r "$INSTALL_DIR/requirements.txt"
-fi
+  if [[ -f "$INSTALL_DIR/requirements.txt" ]]; then
+    "$INSTALL_DIR/venv/bin/pip" install -r "$INSTALL_DIR/requirements.txt"
+  fi
 
-# systemd unit
-echo "[*] Installing systemd unit..."
-cp "$INSTALL_DIR/systemd/$SERVICE_FILE" /etc/systemd/system/$SERVICE_FILE
+  cp "$INSTALL_DIR/systemd/$SERVICE_FILE" /etc/systemd/system/$SERVICE_FILE
+}
 
-systemctl daemon-reload
-systemctl enable $APP_NAME
-systemctl restart $APP_NAME
+main() {
+  echo "[*] Проверка прав root..."
+  check_root
+  echo "[*] Установка зависимостей..."
+  install_deps
+  echo "[*] Установка приложения..."
+  install_app
+  echo "[*] $APP_NAME установлен успешно."
+}
 
-echo "[✓] $APP_NAME installed and running"
+main
