@@ -16,15 +16,16 @@ check_root() {
 
 install_deps() {
   if command -v apt >/dev/null 2>&1; then
-    apt install python3 python3-venv python3-pip iptables
+    apt install python3 python3-venv python3-pip iptables libsystemd-dev pkg-config
   elif command -v dnf >/dev/null 2>&1; then
-    dnf install python3 python3-venv python3-pip iptables
+    dnf install python3 python3-venv python3-pip iptables systemd-devel pkgconf-pkg-config
   elif command -v yum >/dev/null 2>&1; then
-    yum install python3 python3-venv python3-pip iptables
+    yum install python3 python3-venv python3-pip iptables systemd-devel pkgconfig
   elif command -v pacman >/dev/null 2>&1; then
     pacman install python3 python3-venv python3-pip iptables
   elif command -v zypper >/dev/null 2>&1; then
     zypper install python3 python3-venv python3-pip iptables
+  fi
 }
 
 install_app() {
