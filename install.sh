@@ -15,13 +15,16 @@ check_root() {
 }
 
 install_deps() {
-  if [[ "$OS" == "debian" ]]; then
-    apt install -y python3 python3.12-venv python3-pip iptables
-  elif [[ "$OS" == "fedora" ]]; then
-    dnf install -y python3 python3-venv python3-pip iptables
-  elif [[ "$OS" == "redhat" ]]; then
-    yum install -y python3 python3-venv python3-pip iptables
-  fi
+  if command -v apt >/dev/null 2>&1; then
+    apt install python3 python3-venv python3-pip iptables
+  elif command -v dnf >/dev/null 2>&1; then
+    dnf install python3 python3-venv python3-pip iptables
+  elif command -v yum >/dev/null 2>&1; then
+    yum install python3 python3-venv python3-pip iptables
+  elif command -v pacman >/dev/null 2>&1; then
+    pacman install python3 python3-venv python3-pip iptables
+  elif command -v zypper >/dev/null 2>&1; then
+    zypper install python3 python3-venv python3-pip iptables
 }
 
 install_app() {
