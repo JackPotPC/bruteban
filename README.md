@@ -25,3 +25,7 @@ bruteban — это утилита для обнаружения и автома
 git clone https://github.com/username/bruteban.git
 cd bruteban
 
+### Запуск скрипта установки
+
+'''bash
+sudo bash install.sh
