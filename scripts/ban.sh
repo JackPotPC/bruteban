@@ -1,1 +1,1 @@
-echo "Hello"
+sudo iptables -A INPUT -s $IP -j DROP
