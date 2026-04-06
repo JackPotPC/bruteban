@@ -48,6 +48,10 @@ install_app() {
   cp "$INSTALL_DIR/systemd/$SERVICE_FILE" /etc/systemd/system/$SERVICE_FILE
 }
 
+start_systemd_service() {
+  systemctl start "$APP_NAME.service"
+}
+
 main() {
   echo "[*] Проверка прав root..."
   check_root
@@ -56,6 +60,8 @@ main() {
   echo "[*] Установка приложения..."
   install_app
   echo "[*] $APP_NAME установлен успешно."
+  echo "[*] Запуск $APP_NAME.service"
+  start_systemd_service
 }
 
 main
